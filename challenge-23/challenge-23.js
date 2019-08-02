@@ -45,7 +45,7 @@
     var $cleOper = doc.getElementById("cleOper")
 
     isAnyOperatorClicked = false
-    isOperatorTheLastCharacter = false
+    isResultNumber = false
     $input.value = 0
 
     // --- NUMBERS ---
@@ -91,19 +91,22 @@
 
     // --- OPERATIONS ---s
     $sumOper.addEventListener('click', function() {
-        $input.value += '+'
-        isOperatorTheLastCharacter = true
+        isAnyOperatorClicked ? inputOperator('-') : $input.value += '+'
+        isAnyOperatorClicked = true
     })
 
     $minOper.addEventListener('click', function() {
+        isAnyOperatorClicked ? inputOperator('-') : $input.value += '-'
         isAnyOperatorClicked = true
     })
 
     $mulOper.addEventListener('click', function() {
+        isAnyOperatorClicked ? inputOperator('*') : $input.value += '*'
         isAnyOperatorClicked = true
     })
 
     $divOper.addEventListener('click', function() {
+        isAnyOperatorClicked ? inputOperator('/') : $input.value += '/'
         isAnyOperatorClicked = true
     })
 
@@ -120,15 +123,28 @@
 
         $input.value = result
         isAnyOperatorClicked = true
+        isResultNumber = true
     })
 
     $cleOper.addEventListener('click', function() {
         $input.value = 0
+        isAnyOperatorClicked = false
     })
 
     function inputDigit(number) {
-        parseInt($input.value) === 0 || isAnyOperatorClicked ? $input.value = number : $input.value += number
-        isOperatorTheLastCharacter = false
+        if (parseInt($input.value) === 0 || isResultNumber) {
+            $input.value = number
+        }
+        else {
+            $input.value += number
+        } 
+        // parseInt($input.value) === 0 && !isAnyOperatorClicked ? $input.value = number : $input.value += number
+        isAnyOperatorClicked = false
+        isResultNumber = false
+    }
+
+    function inputOperator(operator) {
+        $input.value = $input.value.replace(/[+\-*\/]$/g, operator)
     }
     
 })(document, window)
